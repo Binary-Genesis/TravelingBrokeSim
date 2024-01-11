@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitchhiking Adventure</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Denk+One">
+    <style>
+        body {
+            font-family: 'Denk One', sans-serif;
+            background-color: #212121;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* To hide the default scrollbar */
+            color: #330033; /* Dark purple text */
+        }
+
+        header {
+            background-color: rgba(128, 64, 0, 0.5); /* Darker orange background */
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1; /* Ensure the header is above the canvas */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Move the canvas behind other elements */
+        }
+
+        .section {
+            background-color: rgba(128, 64, 0, 0.5); /* Darker orange background */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 30px;
+            position: relative;
+            z-index: 1; /* Ensure the content is above the canvas */
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: rgba(128, 64, 0, 0.5); /* Darker orange background */
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1; /* Ensure the footer is above the canvas */
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Traveling Broke</h1>
+	<h2> A Hitch Hiking Adventure</h2>
+        <p>Embark on a journey of uncertainty and exploration.</p>
+    </header>
+
+    <canvas id="c"></canvas>
+
+    <div class="section">
+        <h2>Game Overview</h2>
+        <p>In the Hitchhiking Adventure, you, the player, set out on a quest to explore various towns and cities by hitchhiking. Random events unfold as you travel, including catching rides, encounters with the police, and the need to rest. Your distance traveled, stamina, sanity, and health are key factors in your journey. Increase stamina by catching rides, but be wary of police encounters that might impact your health and sanity. Resting is essential to avoid exhaustion.</p>
+        <p>Your goal is to travel as far as possible before your health reaches zero. The game records and displays high scores, saving them using your given name. Will you be the ultimate hitchhiker?</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Hitchhiking Adventure. All rights reserved.</p>
+    </footer>
+
+    <script>
+        var c = document.getElementById("c");
+        var ctx = c.getContext("2d");
+
+        // Making the canvas larger than the window height to enable scrolling
+        c.height = window.innerHeight * 2;
+        c.width = window.innerWidth;
+
+        // Purple and red binary rain configuration
+        var binaryRain = {
+            font_size: 6,
+            columns: c.width / 6,
+            drops: []
+        };
+
+        for (var x = 0; x < binaryRain.columns; x++) {
+            binaryRain.drops[x] = 1;
+        }
+
+        // Drawing the purple and red binary rain
+        function drawBinaryRain() {
+            // Darker orange BG for the canvas
+            // Translucent BG to show trail
+            ctx.fillStyle = "rgba(128, 0, 128, 0.02)"; // Purple background
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "#FF0000"; // Red text
+            ctx.font = binaryRain.font_size + "px monospace";
+
+            // Looping over drops
+            for (var i = 0; i < binaryRain.drops.length; i++) {
+                // A random binary digit to print
+                var text = Math.floor(Math.random() * 2);
+                // x = i * font_size, y = value of drops[i] * font_size
+                ctx.fillText(text, i * binaryRain.font_size, binaryRain.drops[i] * binaryRain.font_size);
+
+                // Sending the drop back to the top randomly after it has crossed the screen
+                // Adding a randomness to the reset to make the drops scattered on the Y axis
+                if (binaryRain.drops[i] * binaryRain.font_size > c.height && Math.random() > 0.975) {
+                    binaryRain.drops[i] = 0;
+                }
+
+                // Incrementing Y coordinate
+                binaryRain.drops[i]++;
+            }
+        }
+
+        setInterval(drawBinaryRain, 33);
+    </script>
+</body>
+</html>
